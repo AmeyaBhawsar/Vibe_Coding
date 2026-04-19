@@ -179,9 +179,11 @@ function Signup() {
               Create Account <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
 
-            <div className="relative py-2 text-center text-xs text-muted-foreground">
-              <span className="relative bg-background px-2">Or Continue With</span>
-              <span className="absolute left-0 right-0 top-1/2 -z-0 h-px bg-border/60" />
+            <div className="pt-4 pb-2 space-y-3">
+              <p className="text-center text-[10px] uppercase tracking-widest text-muted-foreground">
+                Or Continue With
+              </p>
+              <div className="h-px bg-border/60 w-full" />
             </div>
 
             <Button 

@@ -21,8 +21,8 @@ export const Route = createFileRoute("/login")({
 function Login() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [email, setEmail] = useState("jane@company.com");
-  const [password, setPassword] = useState("password");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -132,13 +132,14 @@ function Login() {
           >
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Email</label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-11 rounded-xl" />
+              <Input type="email" placeholder="jane@company.com" value={email} onChange={(e) => setEmail(e.target.value)} className="h-11 rounded-xl" />
             </div>
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Password</label>
               <div className="relative">
                 <Input
                   type={show ? "text" : "password"}
+                  placeholder="••••••••"
                   value={password} onChange={(e) => setPassword(e.target.value)}
                   className="h-11 rounded-xl pr-10"
                 />
@@ -165,12 +166,14 @@ function Login() {
               Log In
             </Button>
 
-            <div className="relative py-2 text-center text-xs text-muted-foreground">
-              <span className="relative bg-background px-2">Or Login With</span>
-              <span className="absolute left-0 right-0 top-1/2 -z-0 h-px bg-border" />
+            <div className="pt-4 pb-2 space-y-3">
+              <p className="text-center text-[10px] uppercase tracking-widest text-muted-foreground">
+                Or Continue With
+              </p>
+              <div className="h-px bg-border w-full" />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               <Button 
                 type="button" 
                 variant="outline" 
@@ -178,9 +181,6 @@ function Login() {
                 onClick={() => window.location.href = "http://localhost:8000/api/auth/google/login"}
               >
                 <span className="font-bold">G</span> Google
-              </Button>
-              <Button type="button" variant="outline" className="h-11 rounded-xl">
-                <span className="font-bold">⊞</span> Microsoft
               </Button>
             </div>
 

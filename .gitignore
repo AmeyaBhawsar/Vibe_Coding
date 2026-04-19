@@ -1,6 +1,13 @@
+# Env files
 .env
 *.env
 backend/.env
 frontend/.env
+
+# Python cache
 __pycache__/
-node_modules/
+*.pyc
+
+# Optional (good practice)
+*.pyo
+*.pyd

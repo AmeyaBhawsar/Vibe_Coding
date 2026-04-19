@@ -4,7 +4,6 @@ import { useRouter, createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { currentUser } from "@/lib/mock-data";
 import {
   Bot,
   Send,
@@ -110,7 +109,15 @@ function classify(text: string): Partial<Extraction> & { reply: string } {
 
 function ChatbotPage() {
   const router = useRouter();
-  const initials = currentUser.name
+  const [user, setUser] = useState({ name: "Loading...", email: "Loading..." });
+
+  useEffect(() => {
+    fetchApi("/auth/me")
+      .then((u) => setUser({ name: u.name, email: u.email }))
+      .catch(() => {});
+  }, []);
+
+  const initials = user.name
     .split(" ")
     .map((n) => n[0])
     .join("");
@@ -202,7 +209,7 @@ function ChatbotPage() {
   };
 
   return (
-    <AppShell variant="user" user={{ name: currentUser.name, subtitle: currentUser.email }}>
+    <AppShell variant="user" user={{ name: user.name, subtitle: user.email }}>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">IT Support Assistant</h1>
