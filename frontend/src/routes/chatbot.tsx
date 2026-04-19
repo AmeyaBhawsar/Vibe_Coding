@@ -15,8 +15,6 @@ import {
   Sparkles,
   Check,
   Loader2,
-  Laptop,
-  Smartphone,
 } from "lucide-react";
 
 export const Route = createFileRoute("/chatbot")({
@@ -57,56 +55,6 @@ const INITIAL_BOT: Msg = {
   ],
 };
 
-function classify(text: string): Partial<Extraction> & { reply: string } {
-  const t = text.toLowerCase();
-  if (t.includes("vpn") || t.includes("anyconnect") || t.includes("l2tp")) {
-    return {
-      category: "Network & VPN",
-      system: "Cisco AnyConnect",
-      priority: "High",
-      environment: "Corporate Laptop",
-      reply:
-        "Got it — sounds like a VPN authentication issue. I can run a diagnostic that resets your VPN profile and connection tokens. Want me to proceed?",
-    };
-  }
-  if (t.includes("password") || t.includes("locked") || t.includes("reset")) {
-    return {
-      category: "Access & Identity",
-      system: "Active Directory",
-      priority: "Medium",
-      environment: "All devices",
-      reply:
-        "I can trigger a secure password reset for you. You'll receive a one-time code at your registered email. Shall I send it now?",
-    };
-  }
-  if (t.includes("printer") || t.includes("print")) {
-    return {
-      category: "Hardware",
-      system: "Network Printer",
-      priority: "Low",
-      environment: "Office network",
-      reply: "Let's get your printer working. Are you on the office network or working remotely?",
-    };
-  }
-  if (t.includes("software") || t.includes("install") || t.includes("license")) {
-    return {
-      category: "Software",
-      system: "Software Catalog",
-      priority: "Low",
-      environment: "Corporate Laptop",
-      reply: "Which application do you need? I can submit a license/install request to your IT team for approval.",
-    };
-  }
-  return {
-    category: "General",
-    system: "—",
-    priority: "Medium",
-    environment: "—",
-    reply:
-      "Thanks for sharing that. Could you tell me a bit more — when did the issue start, and is it affecting just you or your whole team?",
-  };
-}
-
 function ChatbotPage() {
   const router = useRouter();
   const [user, setUser] = useState({ name: "Loading...", email: "Loading..." });
@@ -122,7 +70,6 @@ function ChatbotPage() {
     .map((n) => n[0])
     .join("");
 
-  // UUID for tracking a specific interaction cycle without cross-contamination.
   const sessionId = useMemo(() => `c-${Date.now()}-${Math.floor(Math.random() * 1000)}`, []);
 
   const [messages, setMessages] = useState<Msg[]>([INITIAL_BOT]);
@@ -173,8 +120,8 @@ function ChatbotPage() {
     try {
       const res = await fetchApi("/chat/message", {
         method: "POST",
-        body: JSON.stringify({ 
-          chat_id: sessionId, 
+        body: JSON.stringify({
+          chat_id: sessionId,
           message: trimmed
         }),
       });
@@ -190,12 +137,12 @@ function ChatbotPage() {
       }
 
       setIsStreaming(false);
-      
-      const chips = res.suggestions?.map((s: string) => ({ 
-         icon: <Bot className="h-3 w-3" />, 
-         label: s 
+
+      const chips = res.suggestions?.map((s: string) => ({
+         icon: <Bot className="h-3 w-3" />,
+         label: s
       }));
-      
+
       streamBotReply(res.reply, chips);
     } catch (err: any) {
       setIsStreaming(false);
@@ -234,8 +181,8 @@ function ChatbotPage() {
           </div>
 
           <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-gradient-to-b from-brand-50 to-card p-5">
-            <div className="text-center text-[10px] uppercase tracking-wider text-muted-foreground">
-              Today, {new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+            <div suppressHydrationWarning className="text-center text-[10px] uppercase tracking-wider text-muted-foreground">
+              Today, {typeof window !== "undefined" ? new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : ""}
             </div>
 
             {messages.map((m) =>
@@ -273,23 +220,22 @@ function ChatbotPage() {
                 maxLength={500}
                 className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
               />
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                className="hidden" 
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
                 accept="image/*"
                 onChange={(e) => {
                   if (e.target.files && e.target.files[0]) {
                      const file = e.target.files[0];
                      const attachmentText = `[Attached Image: ${file.name}]`;
                      setInput((prev) => prev ? `${prev} ${attachmentText}` : attachmentText);
-                     // clear input so same file can be selected again if needed
                      e.target.value = '';
                   }
                 }}
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => fileInputRef.current?.click()}
                 className="text-muted-foreground hover:text-foreground"
               >
@@ -352,12 +298,12 @@ function ChatbotPage() {
               />
             </div>
 
-            <Button 
-                className="mt-4 w-full rounded-xl" 
+            <Button
+                className="mt-4 w-full rounded-xl"
                 disabled={!extraction.ready}
                 onClick={async () => {
                     try {
-                        const tkt = await fetchApi("/tickets", {
+                        const tkt = await fetchApi("/tickets/", {
                             method: "POST",
                             body: JSON.stringify({ subject: `${extraction.system} Issue`, category: extraction.category })
                         });
@@ -370,16 +316,6 @@ function ChatbotPage() {
             <Button variant="outline" className="mt-2 w-full rounded-xl" onClick={() => send("Escalate to human")}>
               Escalate to Human
             </Button>
-          </div>
-
-          <div className="rounded-2xl border border-border/60 bg-card p-4 shadow-soft">
-            <div className="flex items-center gap-2 text-sm font-semibold">
-              <Laptop className="h-4 w-4 text-brand-700" /> My Assets Context
-            </div>
-            <div className="mt-3 space-y-2">
-              <Asset icon={<Laptop className="h-4 w-4" />} name='MacBook Pro 14"' tag="LPT-JD-2023" />
-              <Asset icon={<Smartphone className="h-4 w-4" />} name="iPhone 13 Corp" tag="MOB-JD-892" />
-            </div>
           </div>
         </aside>
       </div>
@@ -452,19 +388,6 @@ function ExtractField({
         <span>{value}</span>
         {!pending && <Check className="h-3.5 w-3.5 text-status-resolved-foreground" />}
       </div>
-    </div>
-  );
-}
-
-function Asset({ icon, name, tag }: { icon: React.ReactNode; name: string; tag: string }) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/40 p-2.5">
-      <div className="grid h-8 w-8 place-items-center rounded-lg bg-card text-brand-700">{icon}</div>
-      <div className="flex-1">
-        <div className="text-xs font-semibold">{name}</div>
-        <div className="text-[10px] text-muted-foreground">{tag}</div>
-      </div>
-      <span className="h-1.5 w-1.5 rounded-full bg-status-resolved-foreground" />
     </div>
   );
 }

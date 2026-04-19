@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { StatCard } from "@/components/StatCard";
-import { StatusBadge, PriorityBadge } from "@/components/StatusBadge";
+import { StatusBadge, PriorityBadge, normalizePriority } from "@/components/StatusBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +34,14 @@ export const Route = createFileRoute("/tickets")({
   component: MyTickets,
 });
 
+/** Priority rank for sorting: lower number = higher priority */
+const PRIORITY_RANK: Record<string, number> = {
+  Critical: 1,
+  High: 2,
+  Medium: 3,
+  Low: 4,
+};
+
 function MyTickets() {
   const [user, setUser] = useState({ name: "Loading...", email: "Loading..." });
   const [myTickets, setMyTickets] = useState<any[]>([]);
@@ -63,13 +71,19 @@ function MyTickets() {
   }, []);
 
   const filteredTickets = useMemo(() => {
-     return myTickets.filter(t => {
-        const matchSearch = !searchQuery || t.id.toLowerCase().includes(searchQuery.toLowerCase()) || t.subject.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchStatus = statusFilter === "all" || t.status === statusFilter;
-        const matchPriority = priorityFilter === "all" || t.priority.includes(priorityFilter);
-        const matchCategory = categoryFilter === "all" || t.category === categoryFilter;
-        return matchSearch && matchStatus && matchPriority && matchCategory;
-     });
+     return myTickets
+       .filter(t => {
+          const matchSearch = !searchQuery || t.id.toLowerCase().includes(searchQuery.toLowerCase()) || t.subject.toLowerCase().includes(searchQuery.toLowerCase());
+          const matchStatus = statusFilter === "all" || t.status === statusFilter;
+          const matchPriority = priorityFilter === "all" || (t.priority?.toUpperCase?.() ?? "").includes(priorityFilter);
+          const matchCategory = categoryFilter === "all" || t.category === categoryFilter;
+          return matchSearch && matchStatus && matchPriority && matchCategory;
+       })
+       .sort((a, b) => {
+          const rankA = PRIORITY_RANK[normalizePriority(a.priority)] ?? 99;
+          const rankB = PRIORITY_RANK[normalizePriority(b.priority)] ?? 99;
+          return rankA - rankB;
+       });
   }, [myTickets, searchQuery, statusFilter, priorityFilter, categoryFilter]);
 
   return (
@@ -138,8 +152,8 @@ function MyTickets() {
                   <td className="px-5 py-4 text-xs text-muted-foreground">
                     {new Date(t.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
                   </td>
-                  <td className="px-5 py-4 text-xs text-muted-foreground">
-                    {new Date(t.updated_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                  <td className="px-5 py-4 text-xs font-medium text-muted-foreground">
+                    {new Date(t.updated_at || t.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
                   </td>
                   <td className="px-5 py-4 text-right">
                     <Button asChild variant="ghost" size="icon" className="rounded-lg">

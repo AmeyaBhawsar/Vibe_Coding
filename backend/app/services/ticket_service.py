@@ -13,8 +13,10 @@ class TicketService:
             "subject": "Auto-Escalated Support Ticket",
             "category": category,
             "status": "Open",
+            "priority": "P3 - MEDIUM",
             "history": history,  # Attach chat transcript
-            "created_at": datetime.now().isoformat()
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat()
         }
         
         db["tickets"].append(new_ticket)

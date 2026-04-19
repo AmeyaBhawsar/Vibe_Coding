@@ -10,12 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  adminUser,
-  getTicket,
-  adminTicketConversation,
-  automationLogs,
-} from "@/lib/mock-data";
+import { automationLogs } from "@/lib/mock-data";
+import { fetchApi } from "@/lib/api";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Share2,
@@ -57,12 +54,32 @@ export const Route = createFileRoute("/admin/tickets/$ticketId")({
 
 function AdminTicketDetail() {
   const { ticketId } = Route.useParams();
-  const ticket = getTicket(ticketId);
+  const [adminUser, setAdminUser] = useState({ name: "Admin", title: "Administrator" });
+  const [ticket, setTicket] = useState<any | null>(null);
+  const [technicians, setTechnicians] = useState<any[]>([]);
+  const [savingStatus, setSavingStatus] = useState(false);
+  const [savingAssignee, setSavingAssignee] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedAssignee, setSelectedAssignee] = useState("");
+  const [selectedPriority, setSelectedPriority] = useState("");
+
+  useEffect(() => {
+    fetchApi("/auth/me").then(u => setAdminUser({ name: u.name, title: u.title || "Administrator" })).catch(() => {});
+    fetchApi(`/admin/tickets/${ticketId}`).then(t => {
+      setTicket(t);
+      setSelectedStatus(t?.status || "");
+      setSelectedAssignee(t?.assignee_id || t?.assignee?.id || "unassigned");
+      setSelectedPriority(t?.priority || "");
+    }).catch(() => {});
+    fetchApi("/admin/technicians").then(res => setTechnicians(res.technicians || [])).catch(() => {});
+  }, [ticketId]);
 
   if (!ticket) {
     return (
-      <AppShell variant="admin" user={{ name: adminUser.name, subtitle: adminUser.title ?? "" }}>
-        <p>Ticket not found.</p>
+      <AppShell variant="admin" user={{ name: adminUser.name, subtitle: adminUser.title }}>
+        <div className="flex h-[50vh] items-center justify-center">
+          <p className="animate-pulse text-muted-foreground">Loading ticket details...</p>
+        </div>
       </AppShell>
     );
   }
@@ -71,8 +88,32 @@ function AdminTicketDetail() {
   const created = new Date(ticket.created_at);
   const hoursAgo = Math.max(1, Math.round((Date.now() - created.getTime()) / 3600000));
 
+  const handleStatusSave = async () => {
+    setSavingStatus(true);
+    await fetchApi(`/admin/tickets/${ticketId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: selectedStatus, priority: selectedPriority }),
+    }).catch(() => {});
+    setSavingStatus(false);
+    // Re-fetch
+    fetchApi(`/admin/tickets/${ticketId}`).then(setTicket).catch(() => {});
+  };
+
+  const handleAssigneeSave = async (techId: string) => {
+    setSelectedAssignee(techId);
+    setSavingAssignee(true);
+    await fetchApi(`/admin/tickets/${ticketId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ assignee_id: techId === "unassigned" ? "" : techId }),
+    }).catch(() => {});
+    setSavingAssignee(false);
+    fetchApi(`/admin/tickets/${ticketId}`).then(setTicket).catch(() => {});
+  };
+
+  const requesterName = ticket.requester?.name || ticket.user_id || "Unknown User";
+
   return (
-    <AppShell variant="admin" user={{ name: adminUser.name, subtitle: adminUser.title ?? "" }}>
+    <AppShell variant="admin" user={{ name: adminUser.name, subtitle: adminUser.title }}>
       {/* Header bar */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/60 bg-card p-4 shadow-soft">
         <div className="flex items-center gap-3">
@@ -106,7 +147,7 @@ function AdminTicketDetail() {
         <aside className="space-y-4">
           <Card title="Properties">
             <Field label="Status">
-              <Select defaultValue={ticket.status}>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                 <SelectTrigger className="h-9 rounded-lg"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {["Open", "In Progress", "Pending User", "Resolved", "On Hold"].map((s) => (
@@ -115,27 +156,57 @@ function AdminTicketDetail() {
                 </SelectContent>
               </Select>
             </Field>
-            <Field label="Assignee">
-              <div className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/40 p-2 text-xs">
-                <span className="inline-flex items-center gap-2">
-                  <span className="grid h-5 w-5 place-items-center rounded-full bg-muted text-muted-foreground">👤</span>
-                  Unassigned
-                </span>
-                <button className="rounded-md bg-card px-2 py-0.5 text-[10px] font-medium text-brand-700 shadow-soft">
-                  Assign to me
-                </button>
-              </div>
-            </Field>
             <Field label="Priority">
-              <Select defaultValue={ticket.priority}>
+              <Select value={selectedPriority} onValueChange={setSelectedPriority}>
                 <SelectTrigger className="h-9 rounded-lg"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {["Critical", "High", "Normal", "Low"].map((p) => (
+                  {["P1 - CRITICAL", "P2 - HIGH", "P3 - MEDIUM", "P4 - LOW"].map((p) => (
                     <SelectItem key={p} value={p}>{p}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </Field>
+            <Field label="Assign Technician">
+              <Select
+                value={selectedAssignee}
+                onValueChange={handleAssigneeSave}
+                disabled={savingAssignee}
+              >
+                <SelectTrigger className="h-9 rounded-lg">
+                  <SelectValue placeholder="Select technician...">
+                    {savingAssignee ? (
+                      <span className="inline-flex items-center gap-1 text-muted-foreground">
+                        <Loader2 className="h-3 w-3 animate-spin" /> Saving...
+                      </span>
+                    ) : (
+                      technicians.find(t => t.id === selectedAssignee)?.name ||
+                      ticket.assignee?.name ||
+                      "Unassigned"
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
+                  {technicians.map((tech) => (
+                    <SelectItem key={tech.id} value={tech.id}>
+                      {tech.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Button
+              size="sm"
+              className="mt-1 w-full rounded-lg"
+              onClick={handleStatusSave}
+              disabled={savingStatus}
+            >
+              {savingStatus ? (
+                <><Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />Saving...</>
+              ) : (
+                <><Check className="mr-1 h-3.5 w-3.5" />Apply Changes</>
+              )}
+            </Button>
           </Card>
 
           <Card title="SLA Status" titleAction={<button className="text-[10px] font-medium text-brand-700 hover:underline">Override</button>}>
@@ -158,20 +229,20 @@ function AdminTicketDetail() {
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
                 <AvatarFallback className="bg-gradient-brand text-primary-foreground text-xs">
-                  {initials(ticket.requester.name)}
+                  {initials(requesterName)}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <div className="text-sm font-semibold">{ticket.requester.name}</div>
+                <div className="text-sm font-semibold">{requesterName}</div>
                 <div className="text-[11px] text-muted-foreground">
-                  {ticket.requester.title ?? "Senior Marketing Manager"}
+                  {ticket.requester?.title ?? "Company Employee"}
                 </div>
               </div>
             </div>
             <div className="mt-3 space-y-2 text-xs">
-              <ContactRow icon={<Mail className="h-3 w-3" />} value={ticket.requester.email} link />
+              <ContactRow icon={<Mail className="h-3 w-3" />} value={ticket.requester?.email || ticket.user_id} link />
               <ContactRow icon={<Phone className="h-3 w-3" />} value="+1 (555) 123-4567" />
-              <ContactRow icon={<MapPin className="h-3 w-3" />} value="Remote (New York)" />
+              <ContactRow icon={<MapPin className="h-3 w-3" />} value="Remote" />
             </div>
             <div className="mt-3">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -194,22 +265,35 @@ function AdminTicketDetail() {
           </div>
 
           <div className="space-y-4">
-            <ConvMessage
-              who={ticket.requester.name}
-              when="Today at 9:15 AM"
-              initials={initials(ticket.requester.name)}
-              content={adminTicketConversation[0].content}
-            />
-
-            <SystemNote text='Priority automatically set to Critical due to keyword "urgently"' />
-
-            <ConvMessage
-              who="System Alert"
-              when="Today · 9:16 AM"
-              internal
-              icon={<Lock className="h-3 w-3" />}
-              content='Known issue with L2TP connections on latest Windows Update (KB5034765). Automation playbook "VPN Fix" is recommended.'
-            />
+            {ticket.history?.length > 0 ? (
+              ticket.history.map((msg: any, i: number) => (
+                msg.role === "bot" || msg.role === "system" ? (
+                  <ConvMessage
+                    key={i}
+                    who={msg.role === "system" ? "System Alert" : "AutoIT Bot"}
+                    when={new Date(ticket.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    internal={msg.role === "system"}
+                    icon={<Lock className="h-3 w-3" />}
+                    content={msg.content}
+                  />
+                ) : (
+                  <ConvMessage
+                    key={i}
+                    who={requesterName}
+                    when={new Date(ticket.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    initials={initials(requesterName)}
+                    content={msg.content}
+                  />
+                )
+              ))
+            ) : (
+              <ConvMessage
+                who={requesterName}
+                when={new Date(ticket.created_at).toLocaleString()}
+                initials={initials(requesterName)}
+                content={ticket.subject}
+              />
+            )}
           </div>
 
           {/* Reply box */}
@@ -253,13 +337,13 @@ function AdminTicketDetail() {
           >
             <div className="rounded-xl border border-border/60 bg-gradient-to-br from-brand-100 to-brand-200/60 p-3">
               <div className="flex items-center justify-between">
-                <div className="text-xs font-semibold">Run "VPN Fix" Playbook</div>
+                <div className="text-xs font-semibold">Run Automated Playbook</div>
                 <span className="rounded-full bg-card px-2 py-0.5 text-[9px] font-bold text-brand-700">
                   98% Match
                 </span>
               </div>
               <p className="mt-1 text-[11px] text-muted-foreground">
-                Automated repair of L2TP adapter settings and registry keys.
+                Automated repair based on the detected issue category.
               </p>
               <Button size="sm" className="mt-2 h-7 w-full rounded-lg text-xs">
                 ▶ Execute Now
@@ -273,7 +357,7 @@ function AdminTicketDetail() {
                 </span>
               </div>
               <p className="mt-1 text-[11px] text-muted-foreground">
-                Generate a response explaining the Windows update issue.
+                Generate a draft response for this ticket type.
               </p>
             </div>
           </Card>

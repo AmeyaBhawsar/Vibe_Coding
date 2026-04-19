@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import Dict, Any, List
-from app.data.mock_db import db
+from app.data.mock_db import db, save_db
 from app.schemas.payloads import (
     AdminBulkUpdateRequest, AdminUpdateTicketRequest, AdminNoteRequest,
     UpdateAutomationsRequest, TestAutoRuleRequest, ExecuteRunbookRequest,
@@ -8,7 +8,6 @@ from app.schemas.payloads import (
 )
 from datetime import datetime
 import uuid
-from app.data.mock_db import db
 
 router = APIRouter()
 
@@ -31,21 +30,48 @@ async def bulk_update_tickets(payload: AdminBulkUpdateRequest):
         if t["id"] in payload.ticket_ids:
             t[payload.action] = payload.value
             count += 1
+    save_db()
     return {"success": True, "updatedCount": count}
 
 @router.patch("/tickets/{ticket_id}")
 async def update_ticket_properties(ticket_id: str, payload: AdminUpdateTicketRequest):
-    """Update ticket properties (e.g., status, assignee, priority)"""
+    """Update ticket properties (status, assignee, priority, subject, category)"""
     for t in db["tickets"]:
         if t["id"] == ticket_id:
-            if payload.status:
+            if payload.status is not None:
                 t["status"] = payload.status
-            if payload.assignee_id:
-                t["assignee_id"] = payload.assignee_id
-            if payload.priority:
+            if payload.priority is not None:
                 t["priority"] = payload.priority
+            if payload.subject is not None:
+                t["subject"] = payload.subject
+            if payload.category is not None:
+                t["category"] = payload.category
+            if payload.assignee_id is not None:
+                # Look up the technician to embed their info
+                assignee = next((u for u in db["users"] if u["id"] == payload.assignee_id), None)
+                if assignee:
+                    t["assignee_id"] = assignee["id"]
+                    t["assignee"] = {
+                        "id": assignee["id"],
+                        "name": assignee["name"],
+                        "email": assignee["email"],
+                        "role": assignee["role"]
+                    }
+                else:
+                    raise HTTPException(status_code=404, detail="Assignee not found")
+            save_db()
             return {"success": True, "updatedTicket": t}
     raise HTTPException(status_code=404, detail="Ticket not found")
+
+@router.delete("/tickets/{ticket_id}")
+async def delete_ticket(ticket_id: str):
+    """Delete a ticket by ID"""
+    original_count = len(db["tickets"])
+    db["tickets"] = [t for t in db["tickets"] if t["id"] != ticket_id]
+    if len(db["tickets"]) == original_count:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    save_db()
+    return {"success": True, "deletedTicketId": ticket_id}
 
 @router.post("/tickets/{ticket_id}/notes")
 async def add_admin_note(ticket_id: str, payload: AdminNoteRequest):
@@ -67,7 +93,7 @@ async def get_dashboard_metrics():
     return {
         "active_backlog": open_tickets,
         "resolved_by_it": resolved,
-        "auto_resolved_bot": 1432, # Mock data based on your UI image
+        "auto_resolved_bot": 1432,
         "avg_resolution_time": "2h 15m"
     }
 
@@ -108,12 +134,19 @@ async def get_all_users():
     """List all users for Role Management"""
     return {"users": db["users"]}
 
+@router.get("/technicians")
+async def get_technicians():
+    """List only Technician-role users for assignment dropdown"""
+    technicians = [u for u in db["users"] if u.get("role") == "Technician"]
+    return {"technicians": technicians}
+
 @router.patch("/users/{user_id}/role")
 async def update_user_role(user_id: str, new_role: str):
     """Promote or demote a user"""
     for u in db["users"]:
         if u["id"] == user_id:
             u["role"] = new_role
+            save_db()
             return {"success": True, "user": u}
     return {"error": "User not found"}
 
@@ -127,6 +160,7 @@ async def invite_user(payload: InviteUserRequest):
         "role": payload.assigned_role
     }
     db["users"].append(new_user)
+    save_db()
     return {"success": True, "message": f"Invite sent to {payload.email}"}
 
 @router.get("/roles/matrix")
@@ -148,10 +182,10 @@ async def get_activity_log(page: int = 1, limit: int = 10):
     return {
         "logs": [
             {
-                "id": f"log-{str(uuid.uuid4())[:8]}", 
-                "action": "User Promoted", 
-                "actor": "Admin System", 
-                "target": "David Kim", 
+                "id": f"log-{str(uuid.uuid4())[:8]}",
+                "action": "User Promoted",
+                "actor": "Admin System",
+                "target": "David Kim",
                 "date": datetime.now().isoformat()
             }
         ],
@@ -203,4 +237,5 @@ async def add_update_kb_entry(payload: CreateKBEntryRequest):
          "resolution_steps": payload.content
     }
     db["kb"].append(new_entry)
+    save_db()
     return {"articleId": new_entry["id"], "success": True}

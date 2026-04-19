@@ -4,6 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 # Import all 6 routers now
 from app.routers import chat_router, ticket_router, auth_router, admin_router, users_router, chats_router
 
+# ====================================================================
+# [30 SECOND SWAP DEMO] — UNCOMMENT THESE LINES TO ENABLE AZURE OPENAI
+# from app.services.kb_service import KnowledgeBaseService, LLMKBProvider
+# KnowledgeBaseService.set_provider(LLMKBProvider())
+# ====================================================================
+
 app = FastAPI(title="AutoFlow IT Automation API", version="1.0.0")
 
 app.add_middleware(

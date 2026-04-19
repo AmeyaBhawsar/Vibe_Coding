@@ -68,8 +68,8 @@ function Landing() {
           </span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
-          The role-aware IT automation chatbot that handles requests, predicts issues, and
-          enforces SLAs—empowering users and freeing up admins.
+          The role aware IT automation chatbot that handles requests, predicts issues, and
+          enforces SLAs empowering users and freeing up admins.
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

@@ -51,22 +51,20 @@
     ],
     "tickets": [
         {
-            "id": "TK-9741",
-            "user_id": "u3",
-            "subject": "Database Server Unresponsive - Production Cluster",
-            "category": "Infrastructure",
-            "status": "In Progress",
-            "priority": "P1 - CRITICAL",
-            "created_at": "2026-04-18T20:14:27.539754"
-        },
-        {
             "id": "TK-9740",
             "user_id": "u2",
             "subject": "VPN Access Failed - London Office",
-            "category": "Network",
-            "status": "Open",
-            "priority": "P2 - HIGH",
-            "created_at": "2026-04-18T18:59:27.539770"
+            "category": "Software",
+            "status": "In Progress",
+            "priority": "P3 - MEDIUM",
+            "created_at": "2026-04-18T18:59:27.539770",
+            "assignee_id": "a2",
+            "assignee": {
+                "id": "a2",
+                "name": "Marcus Chen",
+                "email": "m.chen@company.com",
+                "role": "Technician"
+            }
         },
         {
             "id": "TK-8939",
@@ -165,6 +163,86 @@
                 }
             ],
             "created_at": "2026-04-18T21:36:29.649629"
+        },
+        {
+            "id": "TK-1845",
+            "user_id": "u-e0f9c0d0",
+            "subject": "Auto-Escalated Support Ticket",
+            "category": "Escalated",
+            "status": "Open",
+            "priority": "P3 - MEDIUM",
+            "history": [
+                {
+                    "role": "user",
+                    "content": "Reset password"
+                },
+                {
+                    "role": "bot",
+                    "content": "I can help with that, but I need a bit more information.\n\nWhich password are you trying to reset?\n\u2022 Windows login  \n\u2022 Email account (Gmail, Outlook, etc.)  \n\u2022 Office 365 / Microsoft account  \n\u2022 Mac login  \n\u2022 Something else  \n\nLet me know the account or system, and I\u2019ll give you the exact steps.\n\nDid this resolve your issue? (Yes/No)"
+                },
+                {
+                    "role": "user",
+                    "content": "Email"
+                },
+                {
+                    "role": "bot",
+                    "content": "I can help with that. What specific email issue are you experiencing?\n\nExamples:\n\u2022 Trouble sending or receiving emails  \n\u2022 Password or login problems  \n\u2022 Email not syncing on phone or computer  \n\u2022 Setting up a new email account  \n\u2022 Missing or deleted messages  \n\nTell me what\u2019s going on and I\u2019ll guide you through it.\n\nDid this resolve your issue? (Yes/No)"
+                },
+                {
+                    "role": "user",
+                    "content": "No"
+                },
+                {
+                    "role": "bot",
+                    "content": "I'm sorry that didn't work. Could you provide a bit more detail about the error?"
+                },
+                {
+                    "role": "user",
+                    "content": "No"
+                },
+                {
+                    "role": "bot",
+                    "content": "I apologize, but I am unable to resolve this. I have escalated this to our human IT team. Your ticket ID is **TK-1845**."
+                }
+            ],
+            "created_at": "2026-04-19T14:21:38.723793",
+            "updated_at": "2026-04-19T14:21:38.723807"
+        },
+        {
+            "id": "TK-4222",
+            "user_id": "u-e0f9c0d0",
+            "subject": "Auto-Escalated Support Ticket",
+            "category": "Escalated",
+            "status": "Open",
+            "priority": "P3 - MEDIUM",
+            "history": [
+                {
+                    "role": "user",
+                    "content": "VPN issue"
+                },
+                {
+                    "role": "bot",
+                    "content": "VPN authentication failures are often due to a desynced 2FA token. Open the Cisco AnyConnect client, clear the cache, and re-authenticate. If it still fails, check your WiFi stability.\n\nDid this resolve your issue? (Yes/No)"
+                },
+                {
+                    "role": "user",
+                    "content": "No"
+                },
+                {
+                    "role": "bot",
+                    "content": "I'm sorry that didn't work. Could you provide a bit more detail about the error?"
+                },
+                {
+                    "role": "user",
+                    "content": "No"
+                },
+                {
+                    "role": "bot",
+                    "content": "I apologize, but I am unable to resolve this. I have escalated this to our human IT team. Your ticket ID is **TK-4222**."
+                }
+            ],
+            "created_at": "2026-04-19T14:30:13.714248",
+            "updated_at": "2026-04-19T14:30:13.714261"
         }
     ],
     "chats": {
@@ -209,6 +287,111 @@
                 }
             ],
             "failed_attempts": 0
+        },
+        "c-1776588576389-823": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "VPN issue"
+                },
+                {
+                    "role": "bot",
+                    "content": "[LLM Response] Based on your query 'VPN issue', I have analyzed our knowledge base and IT runbook database. Here are my recommended steps: Please restart the affected service, clear your local cache, and if the issue persists, our team will escalate to a Level 2 technician automatically.\n\nDid this resolve your issue? (Yes/No)"
+                }
+            ],
+            "failed_attempts": 0
+        },
+        "c-1776588616030-834": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "Request software"
+                },
+                {
+                    "role": "bot",
+                    "content": "I couldn't find a direct fix for that. Could you try rephrasing your issue?"
+                }
+            ],
+            "failed_attempts": 0
+        },
+        "c-1776588634495-667": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "Request software"
+                },
+                {
+                    "role": "bot",
+                    "content": "I can help with that \u2014 I just need a bit more information.\n\nPlease specify:\n\u2022 The software you need  \n\u2022 The device or operating system (Windows, macOS, etc.)  \n\u2022 Whether you need installation, access, or a license  \n\nOnce I have that, I\u2019ll provide the exact steps.\n\nDid this resolve your issue? (Yes/No)"
+                }
+            ],
+            "failed_attempts": 0
+        },
+        "c-1776588655086-392": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "Reset password"
+                },
+                {
+                    "role": "bot",
+                    "content": "I can help with that, but I need a bit more information.\n\nWhich password are you trying to reset?\n\u2022 Windows login  \n\u2022 Email account (Gmail, Outlook, etc.)  \n\u2022 Office 365 / Microsoft account  \n\u2022 Mac login  \n\u2022 Something else  \n\nLet me know the account or system, and I\u2019ll give you the exact steps.\n\nDid this resolve your issue? (Yes/No)"
+                },
+                {
+                    "role": "user",
+                    "content": "Email"
+                },
+                {
+                    "role": "bot",
+                    "content": "I can help with that. What specific email issue are you experiencing?\n\nExamples:\n\u2022 Trouble sending or receiving emails  \n\u2022 Password or login problems  \n\u2022 Email not syncing on phone or computer  \n\u2022 Setting up a new email account  \n\u2022 Missing or deleted messages  \n\nTell me what\u2019s going on and I\u2019ll guide you through it.\n\nDid this resolve your issue? (Yes/No)"
+                },
+                {
+                    "role": "user",
+                    "content": "No"
+                },
+                {
+                    "role": "bot",
+                    "content": "I'm sorry that didn't work. Could you provide a bit more detail about the error?"
+                },
+                {
+                    "role": "user",
+                    "content": "No"
+                },
+                {
+                    "role": "bot",
+                    "content": "I apologize, but I am unable to resolve this. I have escalated this to our human IT team. Your ticket ID is **TK-1845**."
+                }
+            ],
+            "failed_attempts": 2
+        },
+        "c-1776589201158-436": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "VPN issue"
+                },
+                {
+                    "role": "bot",
+                    "content": "VPN authentication failures are often due to a desynced 2FA token. Open the Cisco AnyConnect client, clear the cache, and re-authenticate. If it still fails, check your WiFi stability.\n\nDid this resolve your issue? (Yes/No)"
+                },
+                {
+                    "role": "user",
+                    "content": "No"
+                },
+                {
+                    "role": "bot",
+                    "content": "I'm sorry that didn't work. Could you provide a bit more detail about the error?"
+                },
+                {
+                    "role": "user",
+                    "content": "No"
+                },
+                {
+                    "role": "bot",
+                    "content": "I apologize, but I am unable to resolve this. I have escalated this to our human IT team. Your ticket ID is **TK-4222**."
+                }
+            ],
+            "failed_attempts": 2
         }
     },
     "kb": [

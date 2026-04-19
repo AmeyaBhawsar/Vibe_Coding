@@ -1,5 +1,5 @@
 export type TicketStatus = "Open" | "In Progress" | "Pending User" | "Pending Approval" | "Resolved" | "On Hold";
-export type TicketPriority = "Critical" | "High" | "Normal" | "Medium" | "Low";
+export type TicketPriority = "Critical" | "High" | "Medium" | "Low";
 export type UserRole = "User" | "Technician" | "Admin";
 
 export interface User {
