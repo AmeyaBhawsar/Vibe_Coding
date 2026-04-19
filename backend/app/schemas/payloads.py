@@ -74,6 +74,8 @@ class AdminUpdateTicketRequest(BaseModel):
     assignee_id: Optional[str] = None
     priority: Optional[str] = None
     tags: Optional[List[str]] = None
+    subject: Optional[str] = None
+    category: Optional[str] = None
 
 class AdminNoteRequest(BaseModel):
     message: str

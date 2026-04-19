@@ -14,13 +14,11 @@ import {
   Bot,
   ShieldCheck,
   Layers,
-  Plus,
   Calendar,
   AlertTriangle,
   TrendingUp,
   ListChecks,
   Users,
-  MoreVertical,
   ArrowRight,
 } from "lucide-react";
 import {
@@ -86,14 +84,9 @@ function AdminDashboard() {
             Overview of ticket volume, automation success, and SLA compliance.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-xl border border-border/60 bg-card px-3 py-1.5 text-xs">
-            <Calendar className="h-3.5 w-3.5" /> Last 30 Days
-          </span>
-          <Button className="rounded-xl">
-            <Plus className="mr-1 h-4 w-4" /> New Macro
-          </Button>
-        </div>
+        <span className="inline-flex items-center gap-1.5 rounded-xl border border-border/60 bg-card px-3 py-1.5 text-xs">
+          <Calendar className="h-3.5 w-3.5" /> Last 30 Days
+        </span>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -232,7 +225,6 @@ function AdminDashboard() {
                 <th className="pb-3 font-medium">Assignee</th>
                 <th className="pb-3 font-medium">Open</th>
                 <th className="pb-3 font-medium">SLA Risk</th>
-                <th className="pb-3 font-medium">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
@@ -252,11 +244,6 @@ function AdminDashboard() {
                   <td className="py-3 font-semibold">{q.open}</td>
                   <td className="py-3">
                     <RiskBadge risk={q.slaRisk} />
-                  </td>
-                  <td className="py-3">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
                   </td>
                 </tr>
               ))}
