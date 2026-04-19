@@ -11,7 +11,8 @@ export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
     ...options.headers,
   };
 
-  const response = await fetch(`/api${endpoint}`, {
+  const apiBase = import.meta.env.VITE_API_URL || "/api";
+  const response = await fetch(`${apiBase}${endpoint}`, {
     ...options,
     headers,
   });
