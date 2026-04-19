@@ -15,8 +15,8 @@ export function Logo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         <Bot className="h-1/2 w-1/2" strokeWidth={2.2} />
       </div>
       <div className="flex items-baseline">
-        <span className={`font-bold tracking-tight ${sizes.text}`}>AutoIT</span>
-        <span className={`font-medium text-muted-foreground ${sizes.dot}`}>.Bot</span>
+        <span className={`font-bold tracking-tight ${sizes.text}`}>Tixly</span>
+        <span className={`font-medium text-muted-foreground ${sizes.dot}`}></span>
       </div>
     </div>
   );

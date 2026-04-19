@@ -11,8 +11,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Log In — AutoIT.Bot" },
-      { name: "description", content: "Log in to your AutoIT.Bot account to manage IT tickets and automation." },
+      { title: "Log In — Tixly" },
+      { name: "description", content: "Log in to your Tixly account to manage IT tickets and automation." },
     ],
   }),
   component: Login,
@@ -28,11 +28,11 @@ function Login() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
     const userId = params.get("userId");
-    
+
     if (token && userId) {
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
-      
+
       fetchApi("/auth/me").then(u => {
         toast.success("Logged in with Google!");
         window.history.replaceState({}, document.title, "/login");
@@ -58,7 +58,7 @@ function Login() {
       localStorage.setItem("token", res.token);
       localStorage.setItem("userId", res.user.id);
       toast.success("Successfully logged in.");
-      
+
       if (res.user.role === "Admin") {
         navigate({ to: "/admin" });
       } else {
@@ -74,7 +74,7 @@ function Login() {
       {/* Left brand panel */}
       <div className="relative hidden flex-col justify-between bg-gradient-to-br from-brand-300 via-brand-400 to-brand-500 p-10 text-foreground md:flex">
         <Logo size="md" />
-        <div>
+        <div className="mx-auto w-full max-w-lg">
           <h2 className="text-4xl font-bold leading-tight tracking-tight">
             Effortlessly manage your
             <br />
@@ -112,7 +112,7 @@ function Login() {
             </div>
           </div>
         </div>
-        <p className="text-xs text-foreground/60">© 2026 AutoIT.Bot · Secure Authentication</p>
+        <p className="text-xs text-foreground/60">© 2026 Tixly · Secure Authentication</p>
       </div>
 
       {/* Right form */}
@@ -174,10 +174,10 @@ function Login() {
             </div>
 
             <div className="grid grid-cols-1 gap-3">
-              <Button 
-                type="button" 
-                variant="outline" 
-                className="h-11 rounded-xl" 
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11 rounded-xl"
                 onClick={() => window.location.href = "http://localhost:8000/api/auth/google/login"}
               >
                 <span className="font-bold">G</span> Google

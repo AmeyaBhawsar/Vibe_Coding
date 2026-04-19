@@ -20,7 +20,7 @@ import {
 export const Route = createFileRoute("/tickets/$ticketId")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.ticketId} — AutoIT.Bot` },
+      { title: `${params.ticketId} — Tixly` },
       { name: "description", content: `Details and activity for ticket ${params.ticketId}.` },
     ],
   }),
@@ -50,12 +50,12 @@ export const Route = createFileRoute("/tickets/$ticketId")({
 function TicketDetail() {
   const { ticketId } = Route.useParams();
   const [user, setUser] = useState({ name: "Loading...", email: "Loading..." });
-  const [ticketState, setTicketState] = useState<{ticket: any; messages: any[]} | null>(null);
+  const [ticketState, setTicketState] = useState<{ ticket: any; messages: any[] } | null>(null);
   const [replyText, setReplyText] = useState("");
 
   useEffect(() => {
-    fetchApi("/auth/me").then(u => setUser({ name: u.name, email: u.email })).catch(() => {});
-    fetchApi(`/tickets/${ticketId}`).then(setTicketState).catch(() => {});
+    fetchApi("/auth/me").then(u => setUser({ name: u.name, email: u.email })).catch(() => { });
+    fetchApi(`/tickets/${ticketId}`).then(setTicketState).catch(() => { });
   }, [ticketId]);
 
   if (!ticketState) {
@@ -84,7 +84,7 @@ function TicketDetail() {
       // re-fetch implicitly 
       const updated = await fetchApi(`/tickets/${ticketId}`);
       setTicketState(updated);
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   };
@@ -143,15 +143,15 @@ function TicketDetail() {
             <h2 className="text-sm font-semibold">Activity & Updates</h2>
             <div className="mt-5 space-y-5">
               {messages?.map((msg: any, i: number) => (
-                 <Reply
-                    key={i}
-                    name={msg.role === "user" ? user.name : ticket.assignee?.name || "AutoIT Bot"}
-                    role={msg.role === "user" ? "Requester" : "Support Agent"}
-                    time={new Date(msg.timestamp || ticket.created_at).toLocaleString()}
-                    initials={initials(msg.role === "user" ? user.name : ticket.assignee?.name || "Bot")}
-                    content={msg.content}
-                    self={msg.role === "user"}
-                 />
+                <Reply
+                  key={i}
+                  name={msg.role === "user" ? user.name : ticket.assignee?.name || "Tixly Bot"}
+                  role={msg.role === "user" ? "Requester" : "Support Agent"}
+                  time={new Date(msg.timestamp || ticket.created_at).toLocaleString()}
+                  initials={initials(msg.role === "user" ? user.name : ticket.assignee?.name || "Bot")}
+                  content={msg.content}
+                  self={msg.role === "user"}
+                />
               ))}
             </div>
           </section>
@@ -197,7 +197,7 @@ function TicketDetail() {
           <div className="flex h-[480px] flex-col rounded-2xl border border-border/60 bg-card shadow-soft">
             <div className="border-b border-border/60 p-4">
               <div className="flex items-center gap-2 text-sm font-semibold">
-                <Sparkles className="h-4 w-4 text-brand-700" /> Ask AutoIT.Bot
+                <Sparkles className="h-4 w-4 text-brand-700" /> Ask Tixly
               </div>
               <div className="text-[11px] text-muted-foreground">Contextual help for this ticket</div>
             </div>

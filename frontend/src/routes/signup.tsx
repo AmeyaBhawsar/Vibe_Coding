@@ -12,8 +12,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
-      { title: "Sign Up — AutoIT.Bot" },
-      { name: "description", content: "Create your AutoIT.Bot account and start automating IT requests today." },
+      { title: "Sign Up — Tixly" },
+      { name: "description", content: "Create your Tixly account and start automating IT requests today." },
     ],
   }),
   component: Signup,
@@ -34,9 +34,9 @@ function Signup() {
     try {
       const res = await fetchApi("/auth/register", {
         method: "POST",
-        body: JSON.stringify({ 
-          email, 
-          password, 
+        body: JSON.stringify({
+          email,
+          password,
           full_name: `${firstName} ${lastName}`.trim(),
           organization
         }),
@@ -58,11 +58,11 @@ function Signup() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
     const userId = params.get("userId");
-    
+
     if (token && userId) {
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
-      
+
       fetchApi("/auth/me").then(u => {
         toast.success("Account created successfully with Google!");
         window.history.replaceState({}, document.title, "/signup");
@@ -96,16 +96,16 @@ function Signup() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-medium">First Name</label>
-                <Input placeholder="Jane" value={firstName} onChange={e=>setFirstName(e.target.value)} className="mt-1 h-10 rounded-xl" />
+                <Input placeholder="Jane" value={firstName} onChange={e => setFirstName(e.target.value)} className="mt-1 h-10 rounded-xl" />
               </div>
               <div>
                 <label className="text-xs font-medium">Last Name</label>
-                <Input placeholder="Doe" value={lastName} onChange={e=>setLastName(e.target.value)} className="mt-1 h-10 rounded-xl" />
+                <Input placeholder="Doe" value={lastName} onChange={e => setLastName(e.target.value)} className="mt-1 h-10 rounded-xl" />
               </div>
             </div>
 
             <Field label="Work Email" icon={<Mail className="h-4 w-4" />}>
-              <Input placeholder="jane@company.com" type="email" value={email} onChange={e=>setEmail(e.target.value)} className="h-10 rounded-xl pl-9" />
+              <Input placeholder="jane@company.com" type="email" value={email} onChange={e => setEmail(e.target.value)} className="h-10 rounded-xl pl-9" />
             </Field>
 
             <div>
@@ -114,7 +114,7 @@ function Signup() {
                 <span className="text-[10px] text-muted-foreground">Optional</span>
               </div>
               <Field icon={<Tag className="h-4 w-4" />}>
-                <Input placeholder="Enter invite code..." value={organization} onChange={e=>setOrganization(e.target.value)} className="h-10 rounded-xl pl-9" />
+                <Input placeholder="Enter invite code..." value={organization} onChange={e => setOrganization(e.target.value)} className="h-10 rounded-xl pl-9" />
               </Field>
             </div>
 
@@ -143,7 +143,7 @@ function Signup() {
                 <Input
                   type={show ? "text" : "password"}
                   placeholder="••••••••"
-                  value={password} onChange={e=>setPassword(e.target.value)}
+                  value={password} onChange={e => setPassword(e.target.value)}
                   className="h-10 rounded-xl pr-10"
                 />
                 <button
@@ -186,9 +186,9 @@ function Signup() {
               <div className="h-px bg-border/60 w-full" />
             </div>
 
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              type="button"
+              variant="outline"
               className="h-11 w-full rounded-xl"
               onClick={() => window.location.href = "http://localhost:8000/api/auth/google/login"}
             >
@@ -205,7 +205,7 @@ function Signup() {
         </div>
 
         <p className="mt-6 text-xs text-muted-foreground">
-          © 2026 AutoIT.Bot · Secure Authentication
+          © 2026 Tixly · Secure Authentication
         </p>
       </div>
     </div>

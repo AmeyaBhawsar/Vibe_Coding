@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * AutoIT.Bot — Blue Serenity Design System
+ * Tixly — Blue Serenity Design System
  * Palette: alice-blue → baby-blue-ice (periwinkle range)
  * All colors in oklch.
  */
@@ -90,14 +90,22 @@
   --radius: 0.875rem;
 
   /* Blue Serenity scale */
-  --brand-50: oklch(0.975 0.013 263);   /* alice-blue */
-  --brand-100: oklch(0.954 0.022 264);  /* lavender */
-  --brand-200: oklch(0.937 0.034 264);  /* lavender-2 */
-  --brand-300: oklch(0.913 0.046 265);  /* periwinkle */
-  --brand-400: oklch(0.892 0.058 266);  /* periwinkle-2 */
-  --brand-500: oklch(0.866 0.072 267);  /* periwinkle-3 */
-  --brand-600: oklch(0.835 0.094 268);  /* baby-blue-ice */
-  --brand-700: oklch(0.62 0.18 270);    /* deep periwinkle accent */
+  --brand-50: oklch(0.975 0.013 263);
+  /* alice-blue */
+  --brand-100: oklch(0.954 0.022 264);
+  /* lavender */
+  --brand-200: oklch(0.937 0.034 264);
+  /* lavender-2 */
+  --brand-300: oklch(0.913 0.046 265);
+  /* periwinkle */
+  --brand-400: oklch(0.892 0.058 266);
+  /* periwinkle-2 */
+  --brand-500: oklch(0.866 0.072 267);
+  /* periwinkle-3 */
+  --brand-600: oklch(0.835 0.094 268);
+  /* baby-blue-ice */
+  --brand-700: oklch(0.62 0.18 270);
+  /* deep periwinkle accent */
 
   --background: oklch(0.985 0.008 260);
   --foreground: oklch(0.22 0.04 265);
@@ -190,7 +198,8 @@
     border-color: var(--color-border);
   }
 
-  html, body {
+  html,
+  body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-feature-settings: "cv11", "ss01";
@@ -206,12 +215,30 @@
 }
 
 @layer utilities {
-  .bg-gradient-hero { background-image: var(--gradient-hero); }
-  .bg-gradient-brand { background-image: var(--gradient-brand); }
-  .bg-gradient-soft { background-image: var(--gradient-soft); }
-  .shadow-soft { box-shadow: var(--shadow-soft); }
-  .shadow-elevated { box-shadow: var(--shadow-elevated); }
-  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .bg-gradient-hero {
+    background-image: var(--gradient-hero);
+  }
+
+  .bg-gradient-brand {
+    background-image: var(--gradient-brand);
+  }
+
+  .bg-gradient-soft {
+    background-image: var(--gradient-soft);
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
   .glass {
     background: oklch(1 0 0 / 0.7);
     backdrop-filter: blur(12px);

@@ -27,7 +27,7 @@ import {
 export const Route = createFileRoute("/tickets")({
   head: () => ({
     meta: [
-      { title: "My Tickets — AutoIT.Bot" },
+      { title: "My Tickets — Tixly" },
       { name: "description", content: "Manage and track your IT support requests." },
     ],
   }),
@@ -58,32 +58,32 @@ function MyTickets() {
   });
 
   useEffect(() => {
-    fetchApi("/auth/me").then(u => setUser({ name: u.name, email: u.email })).catch(() => {});
+    fetchApi("/auth/me").then(u => setUser({ name: u.name, email: u.email })).catch(() => { });
     fetchApi("/tickets/my").then(res => {
       setMyTickets(res.tickets);
       setSummary({
-         total: res.total_count,
-         inProgress: res.tickets.filter((t: any) => t.status === "In Progress").length,
-         pendingUser: res.tickets.filter((t: any) => t.status === "Pending User").length, 
-         resolved30d: res.tickets.filter((t: any) => t.status === "Resolved").length
+        total: res.total_count,
+        inProgress: res.tickets.filter((t: any) => t.status === "In Progress").length,
+        pendingUser: res.tickets.filter((t: any) => t.status === "Pending User").length,
+        resolved30d: res.tickets.filter((t: any) => t.status === "Resolved").length
       });
-    }).catch(() => {});
+    }).catch(() => { });
   }, []);
 
   const filteredTickets = useMemo(() => {
-     return myTickets
-       .filter(t => {
-          const matchSearch = !searchQuery || t.id.toLowerCase().includes(searchQuery.toLowerCase()) || t.subject.toLowerCase().includes(searchQuery.toLowerCase());
-          const matchStatus = statusFilter === "all" || t.status === statusFilter;
-          const matchPriority = priorityFilter === "all" || (t.priority?.toUpperCase?.() ?? "").includes(priorityFilter);
-          const matchCategory = categoryFilter === "all" || t.category === categoryFilter;
-          return matchSearch && matchStatus && matchPriority && matchCategory;
-       })
-       .sort((a, b) => {
-          const rankA = PRIORITY_RANK[normalizePriority(a.priority)] ?? 99;
-          const rankB = PRIORITY_RANK[normalizePriority(b.priority)] ?? 99;
-          return rankA - rankB;
-       });
+    return myTickets
+      .filter(t => {
+        const matchSearch = !searchQuery || t.id.toLowerCase().includes(searchQuery.toLowerCase()) || t.subject.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchStatus = statusFilter === "all" || t.status === statusFilter;
+        const matchPriority = priorityFilter === "all" || (t.priority?.toUpperCase?.() ?? "").includes(priorityFilter);
+        const matchCategory = categoryFilter === "all" || t.category === categoryFilter;
+        return matchSearch && matchStatus && matchPriority && matchCategory;
+      })
+      .sort((a, b) => {
+        const rankA = PRIORITY_RANK[normalizePriority(a.priority)] ?? 99;
+        const rankB = PRIORITY_RANK[normalizePriority(b.priority)] ?? 99;
+        return rankA - rankB;
+      });
   }, [myTickets, searchQuery, statusFilter, priorityFilter, categoryFilter]);
 
   return (
@@ -111,11 +111,11 @@ function MyTickets() {
         <div className="flex flex-wrap items-center gap-3 border-b border-border/60 p-4">
           <div className="relative flex-1 min-w-[240px]">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input 
-                placeholder="Search tickets by ID, title, or keyword..." 
-                className="h-10 rounded-xl pl-9" 
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+            <Input
+              placeholder="Search tickets by ID, title, or keyword..."
+              className="h-10 rounded-xl pl-9"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
           <Filter label="All Statuses" value={statusFilter} onChange={setStatusFilter} options={["Open", "In Progress", "Pending User", "Resolved"]} />
@@ -192,7 +192,7 @@ function Filter({ label, value, onChange, options }: { label: string, value: str
       <SelectContent>
         <SelectItem value="all">{label}</SelectItem>
         {options.map((opt) => (
-           <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+          <SelectItem key={opt} value={opt}>{opt}</SelectItem>
         ))}
       </SelectContent>
     </Select>

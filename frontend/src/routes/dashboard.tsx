@@ -16,12 +16,13 @@ import {
   ArrowRight,
   Wifi,
   KeyRound,
+  Mail,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "User Dashboard — AutoIT.Bot" },
+      { title: "User Dashboard — Tixly" },
       { name: "description", content: "Overview of your IT requests, SLA compliance, and quick actions." },
     ],
   }),
@@ -105,24 +106,37 @@ function Dashboard() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-border/60 bg-card p-6 shadow-soft">
+          <section className="rounded-2xl border border-border/60 bg-card p-6 shadow-soft opacity-90">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Recommended Automation Tips</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-semibold">Recommended Automation Tips</h2>
+                <span className="rounded-full bg-brand-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-800 shadow-sm">
+                  Sneak Peek ✨
+                </span>
+              </div>
               <Lightbulb className="h-4 w-4 text-brand-700" />
             </div>
             <div className="mt-4 space-y-3">
               <Tip
                 icon={<KeyRound className="h-4 w-4" />}
                 title="Automate Password Resets"
-                badge="POPULAR"
+                badge="Coming Soon"
                 desc="Did you know you can reset your AD password instantly using the chatbot? No wait time required."
-                cta="Try it now"
+                cta="Notify Me"
               />
               <Tip
                 icon={<Wifi className="h-4 w-4" />}
                 title="Guest Wi-Fi Access"
+                badge="In Development"
                 desc="Generate temporary guest Wi-Fi credentials in seconds through the automated portal."
-                cta="Learn more"
+                cta="Join Waitlist"
+              />
+              <Tip
+                icon={<Mail className="h-4 w-4" />}
+                title="Email Notifications"
+                badge="Coming Soon"
+                desc="Get instant email alerts when your tickets are created, updated, or resolved."
+                cta="Enable Alerts"
               />
             </div>
           </section>
@@ -140,12 +154,12 @@ function Dashboard() {
               <li className="text-xs text-muted-foreground">No recent activity.</li>
             ) : (
               activities.map(a => (
-                <ActivityItem 
-                  key={a.id} 
-                  when={new Date(a.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} 
-                  title={a.status === 'Resolved' ? "Ticket Resolved" : "Ticket Created"} 
-                  detail={`${a.subject} (${a.id})`} 
-                  dot={a.status === 'Resolved' ? "resolved" : "info"} 
+                <ActivityItem
+                  key={a.id}
+                  when={new Date(a.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  title={a.status === 'Resolved' ? "Ticket Resolved" : "Ticket Created"}
+                  detail={`${a.subject} (${a.id})`}
+                  dot={a.status === 'Resolved' ? "resolved" : "info"}
                 />
               ))
             )}

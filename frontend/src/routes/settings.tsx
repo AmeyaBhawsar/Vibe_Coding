@@ -15,7 +15,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Profile & Settings — AutoIT.Bot" },
+      { title: "Profile & Settings — Tixly" },
       { name: "description", content: "Manage your profile, password, and request elevated access." },
     ],
   }),
@@ -33,13 +33,13 @@ function SettingsPage() {
 
   useEffect(() => {
     fetchApi("/auth/me").then(u => {
-       setUser(u);
-       const parts = u.name ? u.name.split(" ") : [""];
-       setFirst(parts[0] || "");
-       setLast(parts.slice(1).join(" ") || "");
-       setEmail(u.email || "");
-       setPhone(u.phone || "");
-    }).catch(() => {});
+      setUser(u);
+      const parts = u.name ? u.name.split(" ") : [""];
+      setFirst(parts[0] || "");
+      setLast(parts.slice(1).join(" ") || "");
+      setEmail(u.email || "");
+      setPhone(u.phone || "");
+    }).catch(() => { });
   }, []);
 
   const [currentPwd, setCurrentPwd] = useState("");

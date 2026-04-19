@@ -20,7 +20,7 @@ import {
 export const Route = createFileRoute("/chatbot")({
   head: () => ({
     meta: [
-      { title: "Chatbot — AutoIT.Bot" },
+      { title: "Chatbot — Tixly" },
       { name: "description", content: "Ask the IT support assistant about VPN, password, software, or hardware issues." },
     ],
   }),
@@ -62,7 +62,7 @@ function ChatbotPage() {
   useEffect(() => {
     fetchApi("/auth/me")
       .then((u) => setUser({ name: u.name, email: u.email }))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const initials = user.name
@@ -139,8 +139,8 @@ function ChatbotPage() {
       setIsStreaming(false);
 
       const chips = res.suggestions?.map((s: string) => ({
-         icon: <Bot className="h-3 w-3" />,
-         label: s
+        icon: <Bot className="h-3 w-3" />,
+        label: s
       }));
 
       streamBotReply(res.reply, chips);
@@ -175,7 +175,7 @@ function ChatbotPage() {
               <Bot className="h-4 w-4" />
             </div>
             <div>
-              <div className="text-sm font-semibold">AutoIT Bot</div>
+              <div className="text-sm font-semibold">Tixly Bot</div>
               <div className="text-xs text-muted-foreground">Powered by AI Automation</div>
             </div>
           </div>
@@ -227,10 +227,10 @@ function ChatbotPage() {
                 accept="image/*"
                 onChange={(e) => {
                   if (e.target.files && e.target.files[0]) {
-                     const file = e.target.files[0];
-                     const attachmentText = `[Attached Image: ${file.name}]`;
-                     setInput((prev) => prev ? `${prev} ${attachmentText}` : attachmentText);
-                     e.target.value = '';
+                    const file = e.target.files[0];
+                    const attachmentText = `[Attached Image: ${file.name}]`;
+                    setInput((prev) => prev ? `${prev} ${attachmentText}` : attachmentText);
+                    e.target.value = '';
                   }
                 }}
               />
@@ -299,17 +299,17 @@ function ChatbotPage() {
             </div>
 
             <Button
-                className="mt-4 w-full rounded-xl"
-                disabled={!extraction.ready}
-                onClick={async () => {
-                    try {
-                        const tkt = await fetchApi("/tickets/", {
-                            method: "POST",
-                            body: JSON.stringify({ subject: `${extraction.system} Issue`, category: extraction.category })
-                        });
-                        router.navigate({ to: `/tickets/${tkt.id}` });
-                    } catch(e: any) {}
-                }}
+              className="mt-4 w-full rounded-xl"
+              disabled={!extraction.ready}
+              onClick={async () => {
+                try {
+                  const tkt = await fetchApi("/tickets/", {
+                    method: "POST",
+                    body: JSON.stringify({ subject: `${extraction.system} Issue`, category: extraction.category })
+                  });
+                  router.navigate({ to: `/tickets/${tkt.id}` });
+                } catch (e: any) { }
+              }}
             >
               Create Ticket Now
             </Button>

@@ -38,7 +38,7 @@ import {
 export const Route = createFileRoute("/admin/")({
   head: () => ({
     meta: [
-      { title: "Admin Dashboard — AutoIT.Bot" },
+      { title: "Admin Dashboard — Tixly" },
       { name: "description", content: "IT operations analytics, ticket volume, automation success, and SLA compliance." },
     ],
   }),
@@ -70,9 +70,9 @@ function AdminDashboard() {
       } else {
         setUser({ name: u.name, subtitle: u.title || "Admin" });
       }
-    }).catch(() => {});
-    fetchApi("/tickets/admin/metrics").then(setMetrics).catch(() => {});
-    fetchApi("/tickets/admin/backlog").then(setBacklog).catch(() => {});
+    }).catch(() => { });
+    fetchApi("/tickets/admin/metrics").then(setMetrics).catch(() => { });
+    fetchApi("/tickets/admin/backlog").then(setBacklog).catch(() => { });
   }, []);
 
   return (
@@ -181,7 +181,7 @@ function AdminDashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={metrics.categories.length > 0 ? metrics.categories : [{name: "No Data", value: 100}]}
+                  data={metrics.categories.length > 0 ? metrics.categories : [{ name: "No Data", value: 100 }]}
                   innerRadius={50}
                   outerRadius={80}
                   paddingAngle={2}

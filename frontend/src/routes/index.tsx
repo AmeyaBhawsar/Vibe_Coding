@@ -16,13 +16,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AutoIT.Bot — Resolve IT Tickets Before They Happen" },
+      { title: "Tixly — Resolve IT Tickets Before They Happen" },
       {
         name: "description",
         content:
           "Role-aware IT automation chatbot that handles requests, predicts issues, and enforces SLAs—empowering users and freeing up admins.",
       },
-      { property: "og:title", content: "AutoIT.Bot — Resolve IT Tickets Before They Happen" },
+      { property: "og:title", content: "Tixly — Resolve IT Tickets Before They Happen" },
       {
         property: "og:description",
         content:
@@ -41,7 +41,6 @@ function Landing() {
         <div className="flex items-center gap-2">
           <Logo size="md" />
           <span className="rounded-md bg-brand-200 px-1.5 py-0.5 text-[10px] font-semibold text-brand-700">
-            v2.0
           </span>
         </div>
         <nav className="flex items-center gap-2">
@@ -58,7 +57,7 @@ function Landing() {
       <section className="relative mx-auto max-w-5xl px-6 pt-10 pb-16 text-center">
         <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs font-medium text-brand-700 shadow-soft backdrop-blur">
           <Sparkles className="h-3.5 w-3.5" />
-          v2.0 Automation Engine Live
+          Automation Engine Live
         </div>
         <h1 className="mt-6 text-5xl font-bold tracking-tight text-foreground md:text-6xl">
           Resolve IT Tickets
@@ -80,7 +79,7 @@ function Landing() {
             </Link>
           </Button>
           <Button asChild size="lg" variant="outline" className="rounded-xl bg-card">
-            <Link to="/login">Continue with Google</Link>
+            {/* <Link to="/login">Continue with Google</Link> */}
           </Button>
         </div>
 
@@ -181,7 +180,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
-        © 2026 AutoIT.Bot · Secure Authentication
+        © 2026 Tixly · Secure Authentication
       </footer>
     </div>
   );

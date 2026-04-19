@@ -155,7 +155,7 @@ export function AppSidebar({ variant, user }: AppSidebarProps) {
               onClick={() => { 
                 localStorage.removeItem("token"); 
                 localStorage.removeItem("userId");
-                window.location.replace("/login"); 
+                window.location.replace("/"); 
               }}
               className="text-status-critical focus:text-status-critical-foreground focus:bg-status-critical cursor-pointer"
             >

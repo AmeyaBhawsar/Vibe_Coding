@@ -33,7 +33,7 @@ import {
 export const Route = createFileRoute("/admin/tickets/$ticketId")({
   head: ({ params }) => ({
     meta: [
-      { title: `Admin · ${params.ticketId} — AutoIT.Bot` },
+      { title: `Admin · ${params.ticketId} — Tixly` },
       { name: "description", content: `Admin view for ticket ${params.ticketId}.` },
     ],
   }),
@@ -64,14 +64,14 @@ function AdminTicketDetail() {
   const [selectedPriority, setSelectedPriority] = useState("");
 
   useEffect(() => {
-    fetchApi("/auth/me").then(u => setAdminUser({ name: u.name, title: u.title || "Administrator" })).catch(() => {});
+    fetchApi("/auth/me").then(u => setAdminUser({ name: u.name, title: u.title || "Administrator" })).catch(() => { });
     fetchApi(`/admin/tickets/${ticketId}`).then(t => {
       setTicket(t);
       setSelectedStatus(t?.status || "");
       setSelectedAssignee(t?.assignee_id || t?.assignee?.id || "unassigned");
       setSelectedPriority(t?.priority || "");
-    }).catch(() => {});
-    fetchApi("/admin/technicians").then(res => setTechnicians(res.technicians || [])).catch(() => {});
+    }).catch(() => { });
+    fetchApi("/admin/technicians").then(res => setTechnicians(res.technicians || [])).catch(() => { });
   }, [ticketId]);
 
   if (!ticket) {
@@ -93,10 +93,10 @@ function AdminTicketDetail() {
     await fetchApi(`/admin/tickets/${ticketId}`, {
       method: "PATCH",
       body: JSON.stringify({ status: selectedStatus, priority: selectedPriority }),
-    }).catch(() => {});
+    }).catch(() => { });
     setSavingStatus(false);
     // Re-fetch
-    fetchApi(`/admin/tickets/${ticketId}`).then(setTicket).catch(() => {});
+    fetchApi(`/admin/tickets/${ticketId}`).then(setTicket).catch(() => { });
   };
 
   const handleAssigneeSave = async (techId: string) => {
@@ -105,9 +105,9 @@ function AdminTicketDetail() {
     await fetchApi(`/admin/tickets/${ticketId}`, {
       method: "PATCH",
       body: JSON.stringify({ assignee_id: techId === "unassigned" ? "" : techId }),
-    }).catch(() => {});
+    }).catch(() => { });
     setSavingAssignee(false);
-    fetchApi(`/admin/tickets/${ticketId}`).then(setTicket).catch(() => {});
+    fetchApi(`/admin/tickets/${ticketId}`).then(setTicket).catch(() => { });
   };
 
   const requesterName = ticket.requester?.name || ticket.user_id || "Unknown User";
@@ -270,7 +270,7 @@ function AdminTicketDetail() {
                 msg.role === "bot" || msg.role === "system" ? (
                   <ConvMessage
                     key={i}
-                    who={msg.role === "system" ? "System Alert" : "AutoIT Bot"}
+                    who={msg.role === "system" ? "System Alert" : "Tixly Bot"}
                     when={new Date(ticket.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     internal={msg.role === "system"}
                     icon={<Lock className="h-3 w-3" />}
@@ -470,9 +470,8 @@ function Tab({
   const size = small ? "px-3 py-1 text-xs" : "px-4 py-2 text-sm";
   return (
     <button
-      className={`${size} font-medium transition-colors ${
-        active ? "border-b-2 border-brand-700 text-brand-700" : "text-muted-foreground hover:text-foreground"
-      }`}
+      className={`${size} font-medium transition-colors ${active ? "border-b-2 border-brand-700 text-brand-700" : "text-muted-foreground hover:text-foreground"
+        }`}
     >
       {children}
     </button>

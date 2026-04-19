@@ -40,7 +40,7 @@ import {
 export const Route = createFileRoute("/admin/tickets")({
   head: () => ({
     meta: [
-      { title: "All Tickets — AutoIT.Bot Admin" },
+      { title: "All Tickets — Tixly Admin" },
       { name: "description", content: "Manage, assign, and track all IT support requests across the organization." },
     ],
   }),
@@ -69,7 +69,7 @@ function AllTickets() {
   const [editForm, setEditForm] = useState({ subject: "", category: "", priority: "", status: "", assignee_id: "" });
   const [editSaving, setEditSaving] = useState(false);
 
-  const loadTickets = () => fetchApi("/tickets/all").then(res => setAllTickets(res.tickets)).catch(() => {});
+  const loadTickets = () => fetchApi("/tickets/all").then(res => setAllTickets(res.tickets)).catch(() => { });
 
   useEffect(() => {
     fetchApi("/auth/me").then(u => {
@@ -78,9 +78,9 @@ function AllTickets() {
       } else {
         setUser({ name: u.name, subtitle: u.title || "Admin" });
       }
-    }).catch(() => {});
+    }).catch(() => { });
     loadTickets();
-    fetchApi("/admin/technicians").then(res => setTechnicians(res.technicians || [])).catch(() => {});
+    fetchApi("/admin/technicians").then(res => setTechnicians(res.technicians || [])).catch(() => { });
   }, []);
 
   const filteredTickets = useMemo(() => {
@@ -129,14 +129,14 @@ function AllTickets() {
     await fetchApi(`/admin/tickets/${ticketId}`, {
       method: "PATCH",
       body: JSON.stringify({ status: "Resolved" }),
-    }).catch(() => {});
+    }).catch(() => { });
     loadTickets();
   };
 
   // Delete
   const handleDelete = async (ticketId: string) => {
     if (!window.confirm(`Delete ticket ${ticketId}? This cannot be undone.`)) return;
-    await fetchApi(`/admin/tickets/${ticketId}`, { method: "DELETE" }).catch(() => {});
+    await fetchApi(`/admin/tickets/${ticketId}`, { method: "DELETE" }).catch(() => { });
     loadTickets();
   };
 

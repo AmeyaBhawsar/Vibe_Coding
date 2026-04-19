@@ -124,7 +124,7 @@ export const tickets: Ticket[] = [
     priority: "Normal",
     user_id: "u1",
     requester: { id: "t6", name: "Sarah Jenkins", email: "sj@company.com", role: "User" },
-    assignee: { id: "bot", name: "AutoIT Bot", email: "bot@company.com", role: "Technician", title: "Automation" },
+    assignee: { id: "bot", name: "Tixly Bot", email: "bot@company.com", role: "Technician", title: "Automation" },
     created_at: "2026-04-16T10:00:00Z",
     updated_at: "2026-04-16T10:02:00Z",
   },
